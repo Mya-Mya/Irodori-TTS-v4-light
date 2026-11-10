@@ -20,7 +20,7 @@ into [Aratako/Irodori-TTS-v4.1-Small-MF](https://huggingface.co/Aratako/Irodori-
 
 ## Inference
 
-MeanFlow checkpoints use the same CLI, Gradio applications, and `InferenceRuntime` interface as
+MeanFlow checkpoints use the same CLI and `InferenceRuntime` interface as
 RF checkpoints. The `flow_parameterization` stored in checkpoint metadata selects the sampler
 automatically.
 
@@ -33,8 +33,6 @@ uv run --no-sync python infer.py \
 ```
 
 MeanFlow inference defaults to four sampling steps. Use `--num-steps` to change the step count.
-In either Gradio app, enter the model repository in the checkpoint field and leave **Num Steps**
-blank to use the model default. Enter a number to override it.
 
 Classifier-free guidance (CFG) combines model predictions with and without a condition to control
 how strongly generation follows that condition. Here, text, caption, and speaker guidance is

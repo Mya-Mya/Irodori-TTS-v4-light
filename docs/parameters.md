@@ -80,7 +80,7 @@ speaker reference is reused many times.
 |-----------|---------|-------|
 | `--seconds` | `None` | Manual output duration. If set, it always overrides the default duration behavior. |
 | `--duration-scale` | `1.0` | Multiplies the predicted duration when duration prediction is used. Values above `1.0` produce longer audio; values below `1.0` produce shorter audio. |
-| `--length-check` | `off` | `on`: two-pass synthesis for an overlong predicted duration (see below). Also available as "Length Check (two-pass)" in `gradio_app.py`. |
+| `--length-check` | `off` | `on`: two-pass synthesis for an overlong predicted duration (see below). |
 
 The recommended duration behavior depends on the checkpoint:
 

@@ -215,8 +215,6 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-gradio_outputs/
-gradio_outputs_voicedesign/
 outputs/
 data/
 /scripts

@@ -28,7 +28,7 @@ For model weights and audio samples, please refer to the [Irodori-TTS-v4.1-Small
 - **Multi-GPU Training**: Distributed training via `uv run --no-sync torchrun` with gradient accumulation, mixed precision (bf16), and W&B logging
 - **PEFT LoRA Fine-Tuning**: Parameter-efficient adaptation with PEFT/LoRA for released checkpoints
 - **Speaker Inversion**: Learn reusable speaker embedding tokens for a target voice while freezing the base model
-- **Flexible Inference**: CLI, Gradio Web UI, and HuggingFace Hub checkpoint support
+- **Flexible Inference**: CLI and HuggingFace Hub checkpoint support
 
 ## Architecture
 
@@ -96,26 +96,6 @@ uv run --no-sync python infer.py \
   --ref-wav path/to/reference.wav \
   --output-wav outputs/sample.wav
 ```
-
-### Gradio Web UI
-
-For reference-audio cloning and Speaker Inversion:
-
-```bash
-uv run --no-sync python gradio_app.py --server-name 0.0.0.0 --server-port 7860
-```
-
-Open `http://localhost:7860`.
-
-For VoiceDesign with caption and reference-audio conditioning:
-
-```bash
-uv run --no-sync python gradio_app_voicedesign.py --server-name 0.0.0.0 --server-port 7861
-```
-
-Open `http://localhost:7861`. Both UIs default to `Aratako/Irodori-TTS-v4.1-Small`.
-The hosted [v4.1-Small demo](https://huggingface.co/spaces/Aratako/Irodori-TTS-v4.1-Small-Demo)
-also supports caption and reference-audio conditioning.
 
 ## Inference
 
@@ -189,8 +169,6 @@ reference. The model was trained with randomly concatenated short utterances, an
 speaker-similarity benefit used the same construction. A combined duration of approximately
 30 seconds already captured most of the measured gain. A single uninterrupted long recording
 is accepted by inference, but that input format has not been evaluated and may behave differently.
-
-In Gradio, upload reference clips in the desired order; they can be reordered before generation.
 
 ### LoRA Adapters
 
@@ -412,7 +390,7 @@ LoRA adapter checkpoints can also be converted directly:
 uv run --no-sync python convert_checkpoint_to_safetensors.py outputs/irodori_tts_lora/checkpoint_final
 ```
 
-LoRA adapter checkpoints are merged into the base model automatically during conversion, so the exported `.safetensors` file is directly usable for inference. If you do not want to merge the adapter, pass the adapter directory directly to `infer.py --lora-adapter` or the matching Gradio field.
+LoRA adapter checkpoints are merged into the base model automatically during conversion, so the exported `.safetensors` file is directly usable for inference. If you do not want to merge the adapter, pass the adapter directory directly to `infer.py --lora-adapter`.
 
 For checkpoints with a pretrained text encoder, conversion also writes a `tokenizer/`
 directory beside the safetensors file and embeds the encoder architecture config in the file.
@@ -497,8 +475,6 @@ Train the adapter against the matching full-precision base model.
 Irodori-TTS/
 ├── train.py                    # Training entry point (DDP support)
 ├── infer.py                    # CLI inference
-├── gradio_app.py               # Gradio web UI
-├── gradio_app_voicedesign.py   # Gradio web UI for VoiceDesign checkpoints
 ├── prepare_manifest.py         # Dataset -> DACVAE latent preprocessing
 ├── convert_checkpoint_to_safetensors.py  # Checkpoint converter
 ├── quantize_checkpoint.py      # torchao checkpoint quantization
