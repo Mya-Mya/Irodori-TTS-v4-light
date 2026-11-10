@@ -15,7 +15,6 @@ from pathlib import Path
 from typing import Any
 
 import torch
-import torchaudio
 from safetensors import safe_open
 from safetensors.torch import load_file as load_safetensors_file
 
@@ -1865,29 +1864,24 @@ def _reference_latent_key(
 
 
 def _load_audio(path: str | Path) -> tuple[torch.Tensor, int]:
-    try:
-        return torchaudio.load(str(path))
-    except RuntimeError:
-        import soundfile as sf
+    # soundfile を直接使用（torchaudio.load は torchcodec が必要なため）
+    import soundfile as sf
 
-        data, sr = sf.read(str(path), dtype="float32")
-        wav = torch.from_numpy(data)
-        if wav.ndim == 1:
-            wav = wav.unsqueeze(0)
-        else:
-            wav = wav.T
-        return wav, sr
+    data, sr = sf.read(str(path), dtype="float32")
+    wav = torch.from_numpy(data)
+    if wav.ndim == 1:
+        wav = wav.unsqueeze(0)
+    else:
+        wav = wav.T
+    return wav, sr
 
 
 def save_wav(path: str | Path, audio: torch.Tensor, sample_rate: int) -> Path:
+    import soundfile as sf
+
     out_path = Path(path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     audio_cpu = audio.detach().to(device="cpu", dtype=torch.float32)
-    try:
-        torchaudio.save(str(out_path), audio_cpu, sample_rate)
-    except RuntimeError:
-        import soundfile as sf
-
-        audio_np = audio_cpu.squeeze(0).numpy() if audio_cpu.shape[0] == 1 else audio_cpu.T.numpy()
-        sf.write(str(out_path), audio_np, sample_rate)
+    audio_np = audio_cpu.squeeze(0).numpy() if audio_cpu.shape[0] == 1 else audio_cpu.T.numpy()
+    sf.write(str(out_path), audio_np, sample_rate)
     return out_path
