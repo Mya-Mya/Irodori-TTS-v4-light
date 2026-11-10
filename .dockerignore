@@ -1,0 +1,16 @@
+.git
+.github
+.venv
+.ruff_cache
+.pytest_cache
+**/__pycache__
+**/*.pyc
+
+# 大きいモデル・音声・出力はイメージに入れず、実行時にマウントする
+*.safetensors
+*.pt
+*.pth
+*.wav
+*.ckpt
+outputs/
+scripts/
